@@ -17,13 +17,13 @@ def get_filters():
     """
     print('Hello! Let\'s explore some US bikeshare data!')
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-
+    city = input("Please enter the city name (chicago, new york city, washington): ").lower()
 
     # get user input for month (all, january, february, ... , june)
-
+    month = input("Please enter the month (all, january, february, march, april, may, june): ").lower()
 
     # get user input for day of week (all, monday, tuesday, ... sunday)
-
+    day = input("Please enter the day of the week (all, monday, tuesday, wednesday, thursday, friday, saturday, sunday): ").lower()
 
     print('-'*40)
     return city, month, day
@@ -40,7 +40,17 @@ def load_data(city, month, day):
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
-
+    df = pd.read_csv(CITY_DATA[city])
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
+    df['month'] = df['Start Time'].dt.month
+    df['day_of_week'] = df['Start Time'].dt.day_name()
+    if month != 'all':
+        months = ['january', 'february', 'march', 'april', 'may', 'june']
+        month_index = months.index(month) + 1
+        df = df[df['month'] == month_index]
+    if day != 'all':
+        df = df[df['day_of_week'].str.lower() == day]
+    
 
     return df
 
